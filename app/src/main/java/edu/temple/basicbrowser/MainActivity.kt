@@ -2,6 +2,7 @@ package edu.temple.basicbrowser
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
@@ -24,9 +25,29 @@ class MainActivity : AppCompatActivity() {
         // Allow your browser to intercept hyperlink clicks
         webView.webViewClient = object: WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
+                var safeURL = "https://"
+                if (url != null && !url.startsWith("https://"))
+                    safeURL.plus(url)
+                else
+                    safeURL = url.toString()
+                Log.d("URL", safeURL)
+                urlEditText.setText(safeURL)
                 super.onPageFinished(view, url)
             }
         }
+
+        goButton.setOnClickListener {
+            val url = urlEditText.text.toString()
+            var safeURL = "https://"
+            if (url != null && !url.startsWith("https://"))
+                safeURL = safeURL.plus(url)
+            else
+                safeURL = url.toString()
+            Log.d("URL", safeURL)
+            urlEditText.setText(safeURL)
+            webView.loadUrl(safeURL)
+        }
+
 
     }
 }
